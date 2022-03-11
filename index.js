@@ -75,7 +75,7 @@ app.post('/api/notes',(request,response)=>{
         id : generarId()
     }
      notes = notes.concat(note)
-    response.json(notes)
+    response.json(note)
 })
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
