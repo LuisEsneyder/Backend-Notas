@@ -49,21 +49,19 @@ app.delete('/api/notes/:id',(request,response,next)=>{
     catch(error=>next(error))
     
 })
-app.post('/api/notes',(request,response)=>{
+app.post('/api/notes',(request,response, next)=>{
     const body = request.body
-    if(!body.content){
-        return response.status(400).json({
-            error : "content missing"
-        })
-    }
+    
     const note = Note({
       content : body.content,
       important : body.important || false,
       date : new Date(),
     })
-     note.save().then(result=>{
-       response.json(result)
+     note.save().then(SaveNote=>SaveNote.toJSON())
+     .then(SaveNoteFOrmat=>{
+      response.json(SaveNoteFOrmat)
      })
+     .catch(error=>next(error))
 })
 app.put('/api/notes/:id',(req,res,next)=>{
   const body = req.body
@@ -87,6 +85,9 @@ const errorHandler = (error,request,response,next)=>{
   console.error(error.message);
   if(error.name==='CastError'){
     return response.status(400).send({error : 'malformatted id'})
+  }
+  if (error.name==='ValidationError'){
+    return response.status(400).json({error:error.message})
   }
   next(error)
 }
