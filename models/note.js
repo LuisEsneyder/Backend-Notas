@@ -1,14 +1,4 @@
 const mongoose=require('mongoose')
-const url = process.env.MONGODB_URI
-console.log('connecting to', url);
-
-mongoose.connect(url).then(result=>{
-    console.log('connected to mongodb')
-})
-.catch((error)=>{
-    console.log('error connecting to MongoDb',error.message)
-})
-
 const noteShema = new mongoose.Schema({
     content : {
       type :  String,
@@ -20,6 +10,10 @@ const noteShema = new mongoose.Schema({
       required: true
     },
     important : Boolean,
+    user : {
+      type : mongoose.Schema.Types.ObjectId,
+      ref : 'User'
+    }
 })
 noteShema.set('toJSON',{
   transform : (document, returnedObject)=>{
