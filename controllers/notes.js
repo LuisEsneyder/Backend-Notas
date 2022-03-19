@@ -27,9 +27,8 @@ notesRoutes.get('/:id', async (request, response) => {
 notesRoutes.post('/', async (request, response, next) => {
     const body = request.body
     const token = getTokenFrom(request)
-    
-    //decodificar token
-    const decoddedToken = jwt.verify(token,process.env.SECRET)
+    try {
+        const decoddedToken = jwt.verify(token,process.env.SECRET)
     if(!token || !decoddedToken.id){
         return response.status(401).json({error : 'token missing or invalid'})
     }
@@ -44,6 +43,11 @@ notesRoutes.post('/', async (request, response, next) => {
     user.notes = user.notes.concat(SaveNote._id) 
     await User.findByIdAndUpdate(decoddedToken.id,user)
     response.json(SaveNote)
+    } catch (error) {
+        next(error)
+    }
+    //decodificar token
+    
 })
 notesRoutes.delete('/:id', async (request, response) => {
     const id = request.params.id
