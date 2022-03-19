@@ -41,7 +41,7 @@ notesRoutes.post('/', async (request, response, next) => {
         user : user._id
     })
     const SaveNote = await note.save()
-    user.notes = user.notes.concat(SaveNote._id)
+    user.notes = user.notes.concat(SaveNote._id) 
     await User.findByIdAndUpdate(decoddedToken.id,user)
     response.json(SaveNote)
 })
